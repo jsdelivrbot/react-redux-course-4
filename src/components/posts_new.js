@@ -12,21 +12,29 @@ class PostsNew extends Component {
           type="text"
           {...field.input}
         />
+        {field.meta.error}
       </div>
     );
   }
+
+  onSubmit(values) {
+    console.log(values);
+  }
   
   render() {
+
+    const { handleSubmit } = this.props;
+
     return (
-      <form>
+      <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
         <Field
           name="title"
           label="Title"
           component={this.renderField}
         />
         <Field 
-          name="tags"
-          label="Tags"
+          name="categories"
+          label="Categories"
           component={this.renderField}
         />
         <Field 
@@ -34,11 +42,29 @@ class PostsNew extends Component {
           label="Post Content"
           component={this.renderField}
         />
+        <button type="submit" className="btn btn-primary">Submit</button>
       </form>
     );
   }
 }
 
+function validate(values) {
+  const errors = {};
+
+  if (!values.title) {
+    errors.title = "Enter a title";
+  }
+  if (!values.categories) {
+    errors.categories = "Enter some categories";
+  }
+  if (!values.content) {
+    errors.content = "Enter some content please";
+  }
+
+  return errors;
+}
+
 export default reduxForm({
+  validate,
   form: 'PostsNewForm'
 })(PostsNew);
